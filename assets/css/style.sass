@@ -1,0 +1,649 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;700&display=swap')
+
+$primaryGreen: linear-gradient(to right, #1ac252, #0d9958)
+$primaryOrange: linear-gradient(to right, #EF6C00, #E65100)
+$bgColor: #fff
+$orange: #EF6C00
+$green: #1ac252
+
+*
+    margin: 0
+    padding: 0
+    box-sizing: border-box
+    outline: none
+
+*:not(b), button, input, textarea, select
+    font-weight: 500
+    font-family: 'Raleway', sans-serif
+    font-size: 1rem
+
+b
+    font-family: 'Raleway', sans-serif
+    font-size: 1rem
+
+a
+    color: $green
+
+body
+    display: flex
+    flex-direction: column
+    background: $primaryGreen
+    min-height: 100vh
+
+h1
+    display: block
+    font-size: 40px
+
+.container
+    max-width: 1500px
+    margin: 0 auto
+    padding: 0 2rem
+    width: 100%
+
+.btn
+    display: inline-flex
+    justify-content: center
+    color: $bgColor
+    background: $primaryOrange
+    text-decoration: none
+    border: none
+    padding: 1rem
+    border-radius: 1rem
+    white-space: nowrap
+    cursor: pointer
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)
+    transition: transform .2s ease, box-shadow .2s ease
+
+    &.with-icon
+        align-items: center
+
+        .icon
+            margin-right: 0.5rem
+
+    &:active
+        transform: translateY(5px)
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
+
+.icon-btn
+    display: flex
+    flex-direction: column
+    align-items: center
+    color: $bgColor
+    background: none
+    border: none
+    margin-right: 1rem
+    text-decoration: none
+    font-size: .75rem
+    white-space: nowrap
+    opacity: 1
+    cursor: pointer
+    transition: opacity .1s ease
+
+    i
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: 24px
+        border: 3px solid $bgColor
+        border-radius: 50%
+        height: 40px
+        width: 40px
+        margin-bottom: 0.3rem
+
+    &:hover
+        opacity: 0.8
+
+.catalog
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    display: flex
+    z-index: 99
+    opacity: 0
+    pointer-events: none
+    transition: opacity .5s ease, background .5s ease
+    $colWidth: 30vh
+
+    .logo
+        position: relative
+
+        .col
+            display: flex
+            align-items: center
+            position: absolute
+            left: -$colWidth
+            height: 100%
+            padding-left: 2rem
+            width: $colWidth
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2)
+            overflow: hidden
+            transition: left 1s ease
+
+            span
+                font-weight: bold
+                font-size: 15vh
+
+            @for $i from 1 through 3
+                &:nth-child(#{$i})
+                    background: darken($green, $i * 5%)
+                    z-index: -$i
+
+                    span
+                        transform: translateX(($i - 1) * -$colWidth)
+
+    .main
+        position: absolute
+        left: 0
+        background: $bgColor
+        color: #000
+        padding: 0 3rem 3rem
+        left: $colWidth * 3
+        right: 0
+        height: calc(100% - 4rem)
+        transform: translateY(-50%)
+        margin: 2rem
+        border-radius: 1rem
+        box-shadow: 0 0 15px rgba(0, 0, 0, .5)
+        overflow-y: auto
+        transition: transform .5s ease
+
+        .header
+            position: sticky
+            top: 0
+            display: flex
+            justify-content: space-between
+            padding: 3rem 0 2rem
+            background: $bgColor
+            border-bottom: 2px solid $orange
+
+            .text
+                color: $green
+                font-size: 40px
+                font-weight: bold
+
+            .icon-btn
+                color: #000
+
+                i
+                    border-color: #000
+
+        > ul
+            margin: 2rem 0
+            list-style: none
+
+            li
+                a
+                    color: #000
+                    display: flex
+                    width: 100%
+                    text-decoration: none
+                    padding: 0.5rem 1rem
+
+                    &:hover, &.active
+                        color: $green
+
+                > ul
+                    list-style: none
+                    margin-left: 1rem
+
+    &.active
+        background: rgba(0, 0, 0, 0.7)
+        pointer-events: fill
+        opacity: 1
+
+        @for $i from 1 through 3
+            .col:nth-child(#{$i})
+                left: $colWidth * ($i - 1)
+
+        .main
+            transform: translateY(0)
+
+.alert
+    color: $green
+    border: 2px solid $green
+    border-radius: 1rem
+    padding: 1.5rem
+    background: transparentize($green, .85)
+    font-weight: bold
+
+.form-group
+    display: block
+    flex-direction: column
+    margin-bottom: 2rem
+
+    label
+        display: block
+        font-size: 0.9rem
+        margin-bottom: .5rem
+
+    input
+        padding: .7rem 1rem
+        border-radius: 1rem
+        border: 2px solid darken($bgColor, 10%)
+        width: 100%
+
+    .error:not(:empty)
+        font-size: 0.9em
+        margin-top: .5rem
+        color: red
+        margin-left: 0.2rem
+
+    &:last-child
+        margin-bottom: 0
+
+header
+    .container
+        display: flex
+        align-items: center
+        justify-content: space-between
+        padding: 2rem
+        color: $bgColor
+
+        .logo
+            display: flex
+            align-items: center
+
+            a
+                color: #fff
+                text-decoration: none
+
+                h1, span
+                    font-weight: bold
+                    font-size: 80px
+
+            .menu-btn i
+                margin-bottom: 0
+
+        .search
+            display: flex
+            margin: 0 3rem
+            width: 100%
+            position: relative
+            overflow: hidden
+
+            form
+                display: flex
+                width: 100%
+
+                input
+                    border: none
+                    background: rgba(255, 255, 255, 0.5)
+                    height: 56px
+                    padding: 0 3rem 0 1rem
+                    border-radius: 1rem
+                    width: 100%
+                    transition: background 0.2s ease
+
+                    &:hover, &:focus
+                        background: $bgColor
+
+                        ~ button
+                            color: rgba(0, 0, 0, 0.7)
+
+                button
+                    position: absolute
+                    right: 3rem
+                    top: 0
+                    height: 56px
+                    border: none
+                    padding: 0 1rem
+                    background: none
+                    color: rgba(0, 0, 0, 0.2)
+                    cursor: pointer
+                    transition: color .3s ease
+
+        .cabinet
+            display: flex
+            align-items: center
+
+            .cabinet-btn
+                margin-right: 0
+
+                p
+                    font-size: .75rem
+                    width: 96px
+                    text-overflow: ellipsis
+                    overflow: hidden
+                    white-space: nowrap
+                    text-align: center
+
+main
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    background: $bgColor
+    width: 100%
+    border-radius: 1rem
+    padding: 3rem 0
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
+
+    .back-btn
+        margin-bottom: 2rem
+
+    .info
+        display: flex
+        justify-content: space-between
+        margin-bottom: 4rem
+
+        p
+            display: inline-flex
+            align-items: center
+            font-size: 24px
+
+            i
+                margin-right: 0.3em
+                color: $orange
+
+    section
+        margin-bottom: 2rem
+
+        .title
+            font-size: 24px
+            margin-bottom: 1rem
+
+        .banners
+            display: flex
+
+            a
+                width: calc(100% / 2)
+                margin-right: 1rem
+
+                img
+                    width: 100%
+                    border-radius: 1rem
+                    transition: opacity .2s ease
+
+                    &:hover
+                        opacity: .8
+
+                &:last-child
+                    margin-right: 0
+
+        .products
+            display: flex
+            flex-wrap: wrap
+
+            div
+                display: flex
+                flex-direction: column
+                align-items: center
+                width: calc(100% / 4)
+                padding: 2rem
+                border-radius: 1rem
+
+                .photo
+                    display: block
+                    width: 200px
+                    height: 200px
+                    background-size: contain
+                    background-position: center
+                    background-repeat: no-repeat
+                    border-radius: 1rem
+                    margin-bottom: 1rem
+                    transition: opacity .2s ease
+
+                    &:hover
+                        opacity: .7
+
+                .desc
+                    text-decoration: none
+                    text-align: center
+                    color: #000
+                    margin-top: 1rem
+                    transition: color .2s ease
+
+                    &:hover
+                        color: $green
+
+    .auth
+        display: inline-flex
+        flex-direction: column
+        position: relative
+        left: 50%
+        transform: translateX(-50%)
+        padding: 3rem
+        border-radius: 1rem
+        margin: 3rem 0
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
+
+        h1
+            margin-bottom: 2rem
+
+        form
+            width: 500px
+
+    .cabinet
+        h1
+            display: inline-flex
+            align-items: center
+            margin-bottom: 1rem
+            font-weight: bold
+
+            i
+                font-size: 40px
+                margin-right: 0.5rem
+                color: $green
+
+        .info
+            margin-bottom: 2rem
+
+            i
+                color: $green
+
+        .edit
+            max-width: 500px
+            margin-bottom: 3rem
+
+    .product
+        h1
+            margin-bottom: 1rem
+
+        .subcategory
+            list-style: none
+            margin-left: 1rem
+            padding-left: 1rem
+
+            li
+                a
+                    display: inline-block
+                    color: #000
+                    text-decoration: none
+                    padding: 0.5rem 0
+
+                    &:hover
+                        color: $green
+
+                &::before
+                    content: '🛒'
+
+        .list
+            display: flex
+            flex-wrap: wrap
+
+            div
+                display: flex
+                flex-direction: column
+                align-items: center
+                width: calc(100% / 4)
+                padding: 2rem
+                border-radius: 1rem
+
+                .photo
+                    display: block
+                    width: 200px
+                    height: 200px
+                    background-size: contain
+                    background-position: center
+                    background-repeat: no-repeat
+                    border-radius: 1rem
+                    margin-bottom: 1rem
+                    transition: opacity .2s ease
+
+                    &:hover
+                        opacity: .7
+
+                .desc
+                    text-decoration: none
+                    text-align: center
+                    color: #000
+                    margin-top: 1rem
+                    transition: color .2s ease
+
+                    &:hover
+                        color: $green
+
+        .product-info
+            display: flex
+
+            .photo
+                margin-right: 2rem
+                border-radius: 1rem
+                max-width: 500px
+                max-height: 500px
+
+            > div
+                .price, .price b
+                    font-size: 24px
+
+                .alert
+                    margin-top: 1rem
+
+                .btn
+                    margin: 1rem 0
+
+    .cart
+        h1
+            margin-bottom: 1rem
+
+        ul
+            margin-bottom: 1rem
+            list-style: none
+
+            li
+                a
+                    display: flex
+                    align-items: center
+                    position: relative
+                    text-decoration: none
+                    color: #000
+                    padding: 1rem
+                    border-radius: 1rem
+                    transition: background .1s ease
+
+                    .photo
+                        display: block
+                        width: 100px
+                        height: 100px
+                        background-size: contain
+                        background-position: center
+                        background-repeat: no-repeat
+                        border-radius: 1rem
+                        margin-right: 1rem
+
+                    .remove
+                        position: absolute
+                        top: 0
+                        right: 0
+                        bottom: 0
+
+                        button
+                            justify-content: center
+                            height: 100%
+                            color: lighten(red, 15%)
+                            margin-right: 0
+                            border-top-right-radius: 1rem
+                            border-bottom-right-radius: 1rem
+                            padding: 0 1rem
+                            transition: background .1s ease
+
+                            i
+                                border-color: lighten(red, 15%)
+
+                    &:hover
+                        background: rgba(0, 0, 0, .01)
+
+                        button
+                            background: transparentize(red, .95)
+
+        .total
+            font-size: 24px
+            margin-bottom: 2rem
+
+    .search
+        .products
+            display: flex
+            flex-wrap: wrap
+
+            div
+                display: flex
+                flex-direction: column
+                align-items: center
+                width: calc(100% / 4)
+                padding: 2rem
+                border-radius: 1rem
+
+                .photo
+                    display: block
+                    width: 200px
+                    height: 200px
+                    background-size: contain
+                    background-position: center
+                    background-repeat: no-repeat
+                    border-radius: 1rem
+                    margin-bottom: 1rem
+                    transition: opacity .2s ease
+
+                    &:hover
+                        opacity: .7
+
+                    .desc
+                        text-decoration: none
+                        text-align: center
+                        color: #000
+                        margin-top: 1rem
+                        transition: color .2s ease
+
+                        &:hover
+                            color: $green
+
+footer
+    position: relative
+    color: $bgColor
+    padding: 3rem 0 5rem
+
+    .benefit
+        display: flex
+        justify-content: space-around
+        margin-top: 3rem
+
+        p
+            display: flex
+            align-items: center
+            border: 3px solid $bgColor
+            padding: 1rem 2rem
+            border-radius: 1rem
+            font-weight: bold
+
+            i
+                font-size: 36px
+                margin-right: 0.5rem
+
+    h1
+        font-size: 80px
+        font-weight: bold
+
+    &::before
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background: url('../img/seamlessbg.png')
+        background-size: 500px
+        background-position: bottom
+        filter: invert(1)
+        opacity: .15
+        z-index: -1
