@@ -40,7 +40,7 @@ if (isset($_POST['change'])) {
         }
 
         $_SESSION['user'] = [
-            'id' => $db->select('users', ['id'], ['email' => $_POST['email']]),
+            'id' => $db->select('users', ['id'], ['email' => $_POST['email']])['id'],
             'email' => $_POST['email'],
             'name' => $_POST['name']
         ];
