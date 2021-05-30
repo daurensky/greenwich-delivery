@@ -98,7 +98,7 @@ require_once 'components/header.php';
                     </div>
                     <div class="form-group">
                         <label for="name">Имя</label>
-                        <input type="text" name="name" required placeholder="Диас" value="<?= value('name') ?>" maxlength="30" />
+                        <input type="text" name="name" required value="<?= value('name') ?>" maxlength="30" />
                         <p class="error"><?= error('name') ?></p>
                     </div>
                     <div class="form-group">

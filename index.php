@@ -2,8 +2,6 @@
 session_start();
 require_once 'classes/Db.class.php';
 
-var_dump($_SESSION);
-
 $db = new Db();
 
 $products = $db->select([

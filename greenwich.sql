@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Янв 31 2021 г., 21:06
--- Версия сервера: 5.7.20
--- Версия PHP: 7.2.0
+-- Время создания: Май 31 2021 г., 01:26
+-- Версия сервера: 10.3.22-MariaDB
+-- Версия PHP: 7.4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -33,15 +32,6 @@ CREATE TABLE `cart` (
   `userId` int(11) NOT NULL,
   `product` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Дамп данных таблицы `cart`
---
-
-INSERT INTO `cart` (`id`, `userId`, `product`) VALUES
-(22, 5, '11'),
-(24, 5, '11'),
-(25, 5, '27');
 
 -- --------------------------------------------------------
 
@@ -84,6 +74,23 @@ INSERT INTO `categories` (`id`, `name`, `parent`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `products` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `street` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `house` int(11) NOT NULL,
+  `apart` int(11) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `products`
 --
 
@@ -118,7 +125,6 @@ INSERT INTO `products` (`id`, `name`, `price`, `image`, `categoryId`) VALUES
 (16, 'Напиток PIKO Tempo Вишня 2 л т/п КАЗАХСТАН', 488, 'https://static-sl.insales.ru/images/products/1/5310/318903486/large_%D0%9D%D0%B0%D0%BF%D0%B8%D1%82%D0%BE%D0%BA_PIKO_Tempo_%D0%92%D0%B8%D1%88%D0%BD%D1%8F_2_%D0%BB_%D1%82.jpg', 7),
 (17, 'Вода ARZU LIFE FITNESS б/газа 1,5 л пл/б Riks КАЗАХСТАН ', 148, 'https://static-sl.insales.ru/images/products/1/5449/314398025/large_%D0%92%D0%BE%D0%B4%D0%B0_ARZU_LIFE_FITNESS_%D0%B1_%D0%B3%D0%B0%D0%B7%D0%B0_1_5_%D0%BB_%D0%BF%D0%BB.jpg', 8),
 (18, 'Вода ARZU LIFE FITNESS б/газа 1 л пл/б Riks КАЗАХСТАН ', 117, 'https://static-sl.insales.ru/images/products/1/5269/314397845/large_%D0%92%D0%BE%D0%B4%D0%B0_ARZU_LIFE_FITNESS_%D0%B1_%D0%B3%D0%B0%D0%B7%D0%B0_1_%D0%BB.jpg', 8),
-(19, 'Вода ARZU LIFE FITNESS газ 0,5 л пл/б Riks КАЗАХСТАН ', 86, 'https://static-sl.insales.ru/images/products/1/5581/314398157/large_%D0%92%D0%BE%D0%B4%D0%B0_ARZU_LIFE_FITNESS_%D0%B3%D0%B0%D0%B7_0_5_%D0%BB_%D0%BF%D0%BB.jpg', 8),
 (20, 'Вода ARZU LIFE FITNESS газ 1,5 л пл/б Riks КАЗАХСТАН', 148, 'https://static-sl.insales.ru/images/products/1/6866/314399442/large_%D0%92%D0%BE%D0%B4%D0%B0_ARZU_LIFE_FITNESS_%D0%B3%D0%B0%D0%B7_1_5_%D0%BB_%D0%BF%D0%BB.jpg', 8),
 (21, 'Вода ARZU LIFE FITNESS газ 1 л пл/б Riks КАЗАХСТАН', 117, 'https://static-sl.insales.ru/images/products/1/5914/314398490/large_%D0%92%D0%BE%D0%B4%D0%B0_ARZU_LIFE_FITNESS_%D0%B3%D0%B0%D0%B7_1_%D0%BB_%D0%BF%D0%BB.jpg', 8),
 (22, 'Вода ARZU LIFE FITNESS Лимон 0,52 л пл/б Riks КАЗАХСТАН ', 104, 'https://static-sl.insales.ru/images/products/1/5751/314398327/large_%D0%92%D0%BE%D0%B4%D0%B0_ARZU_LIFE_FITNESS_%D0%9B%D0%B8%D0%BC%D0%BE%D0%BD_0_52_%D0%BB_%D0%BF%D0%BB.jpg', 8),
@@ -200,7 +206,6 @@ INSERT INTO `products` (`id`, `name`, `price`, `image`, `categoryId`) VALUES
 (98, 'Капуста Брокколи 1 кг', 2990, 'https://static-sl.insales.ru/images/products/1/2318/299739406/large_%D0%B1%D1%80%D0%BE%D0%BA%D0%BA%D0%BE%D0%BB%D0%B8.jpg', 30),
 (99, 'Капуста красная свежая 1 кг ', 437, 'https://static-sl.insales.ru/images/products/1/2583/299739671/large_%D0%9A%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B0_%D0%BA%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F.jpg', 30),
 (100, 'Капуста пекинская', 510, 'https://static-sl.insales.ru/images/products/1/3262/299740350/large_%D0%BF%D0%B5%D0%BA%D0%B8%D0%BD%D1%81%D0%BA%D0%B0%D1%8F_%D0%BA%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B0.jpg', 30),
-(101, 'Капуста свежая весовая ', 88, 'https://static-sl.insales.ru/images/products/1/1044/299738132/large_%D0%BA%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B0.jpg', 30),
 (102, 'Картофель южный 1 кг ', 121, 'https://static-sl.insales.ru/images/products/1/7675/304864763/large_%D0%91%D0%B5%D0%B7%D1%8B%D0%BC%D1%8F%D0%BD%D0%BD%D1%8B%D0%B9-1.jpg', 30),
 (103, 'Лук красный вес ', 368, 'https://static-sl.insales.ru/images/products/1/5238/299742326/large_%D0%9B%D1%83%D0%BA_%D0%BA%D1%80%D0%B0%D1%81%D0%BD%D1%8B%D0%B9.jpg', 30),
 (104, 'Перец ПАПРИКА 1 кг', 1955, 'https://static-sl.insales.ru/images/products/1/7541/299744629/large_%D0%BF%D0%B0%D0%BF%D1%80%D0%B8%D0%BA%D0%B0.jpg', 30),
@@ -211,7 +216,8 @@ INSERT INTO `products` (`id`, `name`, `price`, `image`, `categoryId`) VALUES
 (109, 'Грейпфрут 1 кг ', 920, 'https://static-sl.insales.ru/images/products/1/3274/299748554/large_%D0%93%D1%80%D0%B5%D0%B9%D0%BF%D1%84%D1%80%D1%83%D1%82_%D0%B2%D0%B5%D1%81.jpg', 31),
 (110, 'Груша АРГЕНТИНА зеленая 1 кг ', 750, 'https://static-sl.insales.ru/images/products/1/3664/302247504/large_%D0%93%D1%80%D1%83%D1%88%D0%B0_%D0%90%D0%A0%D0%93%D0%95%D0%9D%D0%A2%D0%98%D0%9D%D0%90_%D0%B7%D0%B5%D0%BB%D0%B5%D0%BD%D0%B0%D1%8F_1_%D0%BA%D0%B3.jpg', 31),
 (111, 'Груша КОНФЕРЕНЦИЯ 1 кг ', 920, 'https://static-sl.insales.ru/images/products/1/3479/299748759/large_%D0%93%D1%80%D1%83%D1%88%D0%B0_%D0%9A%D0%BE%D0%BD%D1%84%D0%B5%D1%80%D0%B5%D0%BD%D1%86%D0%B8%D1%8F.jpg', 31),
-(112, 'Лайм 1 шт ', 230, 'https://static-sl.insales.ru/images/products/1/8189/299761661/large_%D0%9B%D0%B0%D0%B9%D0%BC.jpg', 31);
+(112, 'Лайм 1 шт ', 230, 'https://static-sl.insales.ru/images/products/1/8189/299761661/large_%D0%9B%D0%B0%D0%B9%D0%BC.jpg', 31),
+(116, 'Капуста свежая весовая ', 88, 'https://static-sl.insales.ru/images/products/1/1044/299738132/large_%D0%BA%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B0.jpg', 30);
 
 -- --------------------------------------------------------
 
@@ -223,16 +229,16 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `name` varchar(30) NOT NULL,
-  `password` varchar(60) NOT NULL
+  `password` varchar(60) NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `name`, `password`) VALUES
-(4, 'dkambarov17@gmail.com', 'Даурен', '$2y$10$RKhlxrQoeC3Y0k0aDdqHvOYYL2oKaCj5DOPsdATA0jokUsLErfMgm'),
-(5, 'test@test', 'Tester', '$2y$10$4ffo3bbeUECKtYnsVyMK/.d1AHGxkVVWDH9R8OO0j9YSBdYKrnMWG');
+INSERT INTO `users` (`id`, `email`, `name`, `password`, `is_admin`) VALUES
+(10, 'admin@greenwich.kz', 'Администратор', '$2y$10$J4S5gH3O0hWyLSSs1vZ9XeK5lao0H5WXz4XOH3.PyFzBFeh.vzMxC', 1);
 
 --
 -- Индексы сохранённых таблиц
@@ -248,6 +254,12 @@ ALTER TABLE `cart`
 -- Индексы таблицы `categories`
 --
 ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `orders`
+--
+ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -270,7 +282,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT для таблицы `categories`
@@ -279,16 +291,22 @@ ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
+-- AUTO_INCREMENT для таблицы `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

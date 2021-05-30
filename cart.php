@@ -16,9 +16,32 @@ if (isset($_POST['remove'])) {
     header('Location: cart.php');
 }
 
-if (isset($_GET['process'])) {
+if (isset($_POST['process'])) {
+    $cartStr = [];
+
+    foreach ($cart as $cartItem) {
+        $cartStr[] = $cartItem['product'];
+    }
+
+    Db::app()->insert('orders', [
+        'user_id' => $userId,
+        'products' => implode(',', $cartStr),
+        'street' => $_POST['street'],
+        'house' => $_POST['house'],
+        'apart' => $_POST['apart'] ?: -1,
+        'status' => 0,
+        'created_at' => time()
+    ]);
+
     $db->delete('cart', ['userId' => $userId]);
+
     header('Location: cart.php?processed');
+}
+
+function error($name)
+{
+    global $errors;
+    return isset($errors[$name]) ? $errors[$name] : '';
 }
 
 require_once 'components/header.php';
@@ -54,7 +77,23 @@ require_once 'components/header.php';
 
                 <p class="total">Итого • <?= $total ?>₸</p>
 
-                <a href="cart.php?process" class="btn">Оформить заказ</a>
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="street">Улица</label>
+                        <input type="text" name="street" id="street" required>
+                        <p class="error"><?= error('product_name') ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="house">Дом</label>
+                        <input type="number" name="house" id="house" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apart">Квартира (если есть)</label>
+                        <input type="number" name="apart" id="apart">
+                    </div>
+
+                    <button name="process" type="submit" class="btn">Оформить заказ</button>
+                </form>
                 <?php
             } else {
                 if (isset($_GET['processed'])) {

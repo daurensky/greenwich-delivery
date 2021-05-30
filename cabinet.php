@@ -42,7 +42,7 @@ if (isset($_POST['change'])) {
         $_SESSION['user'] = [
             'id' => $db->select('users', ['id'], ['email' => $_POST['email']])['id'],
             'email' => $_POST['email'],
-            'name' => $_POST['name']
+            'name' => $_POST['name'],
         ];
 
         header('Location: /cabinet.php?edited');
@@ -66,6 +66,7 @@ function value($name)
 }
 
 require_once 'components/header.php';
+
 ?>
 
 <main>
@@ -75,6 +76,9 @@ require_once 'components/header.php';
             <div class="info">
                 <p><i class="material-icons-outlined">email</i> <?= $user['email'] ?></p>
             </div>
+            <?php if (Db::app()->isAdmin()) { ?>
+                <a href="admin.php" class="btn">Перейти в панель администратора</a>
+            <?php } ?>
             <form class="edit" method="POST">
                 <h1>Изменить данные</h1>
                 <div class="form-group">
@@ -84,7 +88,7 @@ require_once 'components/header.php';
                 </div>
                 <div class="form-group">
                     <label for="name">Имя</label>
-                    <input type="text" name="name" placeholder="Диас" value="<?= value('name') ?>" maxlength="30" />
+                    <input type="text" name="name" value="<?= value('name') ?>" maxlength="30" />
                     <p class="error"><?= error('name') ?></p>
                 </div>
                 <div class="form-group">

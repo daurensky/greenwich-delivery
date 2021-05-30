@@ -71,6 +71,17 @@ class Db
         return null;
     }
 
+    public function lastInTable(string $table)
+    {
+        $conn = $this->conn;
+
+        $sql = "SELECT id FROM $table ORDER BY id DESC LIMIT 1";
+
+        $result = $conn->query($sql);
+
+        return $result->fetch_row()[0];
+    }
+
     public function insert(string $table, array $values)
     {
         $conn = $this->conn;
@@ -139,5 +150,10 @@ class Db
         if ($conn->query($sql) !== true) {
             die("Error: $sql <br/> $conn->error");
         }
+    }
+
+    public function isAdmin()
+    {
+        return Db::app()->select('users', ['is_admin'], ['id' => $_SESSION['user']['id']])['is_admin'];
     }
 }

@@ -39,6 +39,14 @@ if (isset($_POST['cart'])) {
     header('Location: product.php?product=' . $_GET['product'] . '&added');
 }
 
+if (isset($_POST['delete-product'])) {
+    Db::app()->delete('products', ['id' => $productData['id']]);
+
+    @unlink("$_SERVER[DOCUMENT_ROOT]/$productData[image]");
+
+    header("Location: index.php");
+}
+
 require_once 'components/header.php';
 ?>
 
@@ -95,6 +103,11 @@ require_once 'components/header.php';
                             <a href="auth.php" class="btn" target="_blank">Войти</a>
                             <p>🗝️ Войдите или зарегистрируйтесь, чтобы добавить товар</p>
                         <?php } else { ?>
+                            <?php if (Db::app()->isAdmin()) { ?>
+                                <form method="post">
+                                    <button name="delete-product" class="btn">Удалить товар</button>
+                                </form>
+                            <?php } ?>
                             <form method="post">
                                 <button class="btn" name="cart">Добавить в корзину</button>
                             </form>
