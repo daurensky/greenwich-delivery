@@ -7,6 +7,8 @@ if (!isset($_SESSION['user']) || !Db::app()->isAdmin()) {
     header('Location: index.php');
 }
 
+$orders = Db::app()->select(['table' => 'orders', 'onlyArray' => true], ['*']);
+
 if (isset($_POST['add_product'])) {
     $_POST = array_map('trim', $_POST);
 
@@ -178,81 +180,85 @@ $categories = array_filter($categories, function ($item) {
 
                 <?php if (isset($_GET['orders'])) { ?>
                     <div class="admin-block">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Имя</th>
-                                    <th>Email</th>
-                                    <th>Продукты</th>
-                                    <th>Адрес доставки</th>
-                                    <th>Дата заказа</th>
-                                    <th>Статус</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach (Db::app()->select(['table' => 'orders', 'onlyArray' => true], ['*']) as $order) { ?>
+                        <?php if (!empty($orders)) { ?>
+                            <table>
+                                <thead>
                                     <tr>
-                                        <td><?= ++$i ?></td>
-                                        <td><?= Db::app()->select('users', ['name'], ['id' => $order['user_id']])['name'] ?></td>
-                                        <td><?= Db::app()->select('users', ['email'], ['id' => $order['user_id']])['email'] ?></td>
-                                        <td>
-                                            <button class="btn modal-trigger" data-modal="#order<?= $order['id'] ?>">Просмотр</button>
-
-
-                                            <div class="modal-container" id="order<?= $order['id'] ?>">
-                                                <div class="modal">
-                                                    <div class="header">
-                                                        <p class="title">Продукты</p>
-                                                        <button class="icon-btn close modal-trigger" data-modal="#order<?= $order['id'] ?>">
-                                                            <i class="material-icons-outlined">close</i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="body">
-                                                        <?php foreach (explode(',', $order['products']) as $product) {
-                                                            $product = Db::app()->select('products', ['*'], ['id' => $product]);
-                                                        ?>
-                                                            <?php if (empty($product)) { ?>
-                                                                <div class="order-item">
-                                                                    <div class="order-item__placeholder"></div>
-                                                                    <div class="order-item__texts">
-                                                                        <span class="order-item__name">[Товар удален]</span>
-                                                                    </div>
-                                                                </div>
-                                                            <?php } else { ?>
-                                                                <a href="product.php?product=<?= $product['id'] ?>" target="_blank" class="order-item">
-                                                                    <img src="<?= $product['image'] ?>" class="order-item__photo" />
-                                                                    <div class="order-item__texts">
-                                                                        <span class="order-item__name"><?= $product['name'] ?></span>
-                                                                        <span class="order-item__price"><?= $product['price'] ?> ₸</span>
-                                                                    </div>
-                                                                </a>
-                                                            <?php } ?>
-                                                        <?php } ?>
-                                                    </div>
-                                                    <div class="footer">
-                                                        <button class="btn modal-trigger" data-modal="#order<?= $order['id'] ?>">Закрыть</button>
-                                                    </div>
-                                                </div>
-                                                <div class="overlay modal-trigger" data-modal="#order<?= $order['id'] ?>"></div>
-                                            </div>
-                                        </td>
-                                        <td>ул. <?= $order['street'] ?> <?= $order['house'] ?>, <?= $order['apart'] !== '-1' ? 'кв. ' . $order['apart'] : 'частный дом' ?>.</td>
-                                        <td><?= date('d.m.Y', $order['created_at']) ?></td>
-                                        <td>
-                                            <select class="order-status" data-order="<?= $order['id'] ?>">
-                                                <option value="0" <?= $order['status'] === '0' ? 'selected' : '' ?>>В обработке</option>
-                                                <option value="1" <?= $order['status'] === '1' ? 'selected' : '' ?>>Принят</option>
-                                                <option value="2" <?= $order['status'] === '2' ? 'selected' : '' ?>>Доставлен</option>
-                                                <option value="3" <?= $order['status'] === '3' ? 'selected' : '' ?>>Отклонен</option>
-                                                <option value="4" <?= $order['status'] === '4' ? 'selected' : '' ?>>Возврат</option>
-                                                <option value="5" <?= $order['status'] === '5' ? 'selected' : '' ?>>Удален</option>
-                                            </select>
-                                        </td>
+                                        <th>#</th>
+                                        <th>Имя</th>
+                                        <th>Email</th>
+                                        <th>Продукты</th>
+                                        <th>Адрес доставки</th>
+                                        <th>Дата заказа</th>
+                                        <th>Статус</th>
                                     </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($orders as $order) { ?>
+                                        <tr>
+                                            <td><?= ++$i ?></td>
+                                            <td><?= Db::app()->select('users', ['name'], ['id' => $order['user_id']])['name'] ?></td>
+                                            <td><?= Db::app()->select('users', ['email'], ['id' => $order['user_id']])['email'] ?></td>
+                                            <td>
+                                                <button class="btn modal-trigger" data-modal="#order<?= $order['id'] ?>">Просмотр</button>
+
+
+                                                <div class="modal-container" id="order<?= $order['id'] ?>">
+                                                    <div class="modal">
+                                                        <div class="header">
+                                                            <p class="title">Продукты</p>
+                                                            <button class="icon-btn close modal-trigger" data-modal="#order<?= $order['id'] ?>">
+                                                                <i class="material-icons-outlined">close</i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="body">
+                                                            <?php foreach (explode(',', $order['products']) as $product) {
+                                                                $product = Db::app()->select('products', ['*'], ['id' => $product]);
+                                                            ?>
+                                                                <?php if (empty($product)) { ?>
+                                                                    <div class="order-item">
+                                                                        <div class="order-item__placeholder"></div>
+                                                                        <div class="order-item__texts">
+                                                                            <span class="order-item__name">[Товар удален]</span>
+                                                                        </div>
+                                                                    </div>
+                                                                <?php } else { ?>
+                                                                    <a href="product.php?product=<?= $product['id'] ?>" target="_blank" class="order-item">
+                                                                        <img src="<?= $product['image'] ?>" class="order-item__photo" />
+                                                                        <div class="order-item__texts">
+                                                                            <span class="order-item__name"><?= $product['name'] ?></span>
+                                                                            <span class="order-item__price"><?= $product['price'] ?> ₸</span>
+                                                                        </div>
+                                                                    </a>
+                                                                <?php } ?>
+                                                            <?php } ?>
+                                                        </div>
+                                                        <div class="footer">
+                                                            <button class="btn modal-trigger" data-modal="#order<?= $order['id'] ?>">Закрыть</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="overlay modal-trigger" data-modal="#order<?= $order['id'] ?>"></div>
+                                                </div>
+                                            </td>
+                                            <td>ул. <?= $order['street'] ?> <?= $order['house'] ?>, <?= $order['apart'] !== '-1' ? 'кв. ' . $order['apart'] : 'частный дом' ?>.</td>
+                                            <td><?= date('d.m.Y', $order['created_at']) ?></td>
+                                            <td>
+                                                <select class="order-status" data-order="<?= $order['id'] ?>">
+                                                    <option value="0" <?= $order['status'] === '0' ? 'selected' : '' ?>>В обработке</option>
+                                                    <option value="1" <?= $order['status'] === '1' ? 'selected' : '' ?>>Принят</option>
+                                                    <option value="2" <?= $order['status'] === '2' ? 'selected' : '' ?>>Доставлен</option>
+                                                    <option value="3" <?= $order['status'] === '3' ? 'selected' : '' ?>>Отклонен</option>
+                                                    <option value="4" <?= $order['status'] === '4' ? 'selected' : '' ?>>Возврат</option>
+                                                    <option value="5" <?= $order['status'] === '5' ? 'selected' : '' ?>>Удален</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        <?php } else { ?>
+                            <p>Заказы не найдены</p>
+                        <?php } ?>
                     </div>
                 <?php } ?>
             </div>
